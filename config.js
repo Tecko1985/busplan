@@ -1,4 +1,4 @@
-const APP_VERSION = "1.1";
+const APP_VERSION = "1.2";
 
 // Gruppen-Id (Tools-Übersicht-Benutzerverwaltung) für Nutzer ohne Admin-Status,
 // die den Busplan trotzdem bearbeiten dürfen. Mitgliederpflege dort, nicht hier.
@@ -20,13 +20,13 @@ const STATUS_WERTE = [
 // Startbestand an Bus-Optionen — keine Personendaten. Echte Trainer/Spieltermine
 // kommen ausschließlich per einmaligem Cloud-Import in die Nextcloud, nie ins Repo.
 const DEFAULT_BUSOPTIONEN = [
-  { id: "stadtbus", name: "Stadtbus" },
-  { id: "villa-lampe", name: "Villa Lampe" },
-  { id: "laerz-weiss", name: "Lärz & Weiß" },
-  { id: "sch-bus-hig", name: "SCH-Bus HIG SC911" },
-  { id: "sch-bus-eic", name: "SCH-Bus EIC SC911" },
-  { id: "eltern", name: "Eltern / Privatfahrer" },
-  { id: "vw-autohaus", name: "VW Autohaus (Leihwagen)" }
+  { id: "stadtbus", name: "Stadtbus", regeln: "" },
+  { id: "villa-lampe", name: "Villa Lampe", regeln: "" },
+  { id: "laerz-weiss", name: "Lärz & Weiß", regeln: "" },
+  { id: "sch-bus-hig", name: "SCH-Bus HIG SC911", regeln: "" },
+  { id: "sch-bus-eic", name: "SCH-Bus EIC SC911", regeln: "" },
+  { id: "eltern", name: "Eltern / Privatfahrer", regeln: "" },
+  { id: "vw-autohaus", name: "VW Autohaus (Leihwagen)", regeln: "" }
 ];
 
 // Startbestand an Mannschaften (Name/Liga sind keine Personendaten). Trainer und
@@ -41,6 +41,18 @@ const DEFAULT_TEAMS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.2",
+    groups: [
+      {
+        title: "Regeln je Bus-Option",
+        items: [
+          "In den Einstellungen kann zu jeder Bus-Option ein Freitext mit Regeln hinterlegt werden (z. B. Buchungsfrist, maximale Personenzahl, Abfahrtsort).",
+          "Ist eine Regel hinterlegt, erscheint ein ℹ️-Hinweis an der jeweiligen Spalte im Busplan-Gitter — der Regeltext steht als Tooltip dahinter."
+        ]
+      }
+    ]
+  },
   {
     version: "1.1",
     groups: [

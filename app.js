@@ -69,7 +69,7 @@ function normalizeTeam(t, validOptionIds) {
 }
 function normalizeBusOptionen(arr) {
   if (!Array.isArray(arr)) return [];
-  return arr.filter((o) => o && typeof o === "object" && o.id && o.name).map((o) => ({ id: String(o.id), name: String(o.name) }));
+  return arr.filter((o) => o && typeof o === "object" && o.id && o.name).map((o) => ({ id: String(o.id), name: String(o.name), regeln: typeof o.regeln === "string" ? o.regeln : "" }));
 }
 function seedSeason() {
   const busOptions = clone(DEFAULT_BUSOPTIONEN);
@@ -238,7 +238,7 @@ function renderBusplanGrid() {
   const spiele = team.spiele.slice().sort((a, b) => (a.datum || "").localeCompare(b.datum || ""));
   const conflictMap = conflictMapFromGroups(findConflictGroups());
   const editorCol = canEdit() ? "<th></th>" : "";
-  const theadHtml = `<tr><th>Datum</th><th>Ort</th>${options.map((o) => `<th>${escapeHtml(o.name)}</th>`).join("")}<th>Notiz</th>${editorCol}</tr>`;
+  const theadHtml = `<tr><th>Datum</th><th>Ort</th>${options.map((o) => `<th${o.regeln ? ` title="${escapeHtml(o.regeln)}"` : ""}>${escapeHtml(o.name)}${o.regeln ? " ℹ️" : ""}</th>`).join("")}<th>Notiz</th>${editorCol}</tr>`;
   const rowsHtml = spiele.map((sp) => {
     const cells = options.map((o) => {
       const st = sp.status[o.id] || { wert: "", notiz: "" };
@@ -464,9 +464,12 @@ function renderBusOptionen() {
   const season = getSeason();
   const editable = canEdit();
   document.getElementById("busoptionen-list").innerHTML = season.busOptions.map((o, i) => `
-    <div class="param-row">
-      <input class="pg-label" data-idx="${i}" value="${escapeHtml(o.name)}" ${editable ? "" : "disabled"} />
-      ${editable ? `<button class="icon-btn" data-remove-option="${i}" title="Entfernen">×</button>` : ""}
+    <div class="busoption-row">
+      <div class="param-row">
+        <input class="pg-label" data-idx="${i}" value="${escapeHtml(o.name)}" ${editable ? "" : "disabled"} />
+        ${editable ? `<button class="icon-btn" data-remove-option="${i}" title="Entfernen">×</button>` : ""}
+      </div>
+      <textarea class="pg-regeln" data-regeln-idx="${i}" rows="2" placeholder="Regeln für diesen Bus, z. B. Buchungsfrist, max. Personenzahl, Abfahrtsort …" ${editable ? "" : "disabled"}>${escapeHtml(o.regeln)}</textarea>
     </div>`).join("") || `<p class="muted">Noch keine Bus-Optionen angelegt.</p>`;
 }
 
@@ -748,8 +751,14 @@ function setupListeners() {
   const bo = document.getElementById("busoptionen-list");
   bo.addEventListener("input", (e) => {
     const idx = e.target.dataset.idx;
-    if (idx == null) return;
-    getSeason().busOptions[Number(idx)].name = e.target.value;
+    if (idx != null) {
+      getSeason().busOptions[Number(idx)].name = e.target.value;
+      persist();
+      return;
+    }
+    const ridx = e.target.dataset.regelnIdx;
+    if (ridx == null) return;
+    getSeason().busOptions[Number(ridx)].regeln = e.target.value;
     persist();
   });
   bo.addEventListener("click", (e) => {
@@ -762,7 +771,7 @@ function setupListeners() {
     renderAll();
   });
   document.getElementById("btn-add-busoption").addEventListener("click", () => {
-    getSeason().busOptions.push({ id: uuid(), name: "Neue Option" });
+    getSeason().busOptions.push({ id: uuid(), name: "Neue Option", regeln: "" });
     persist();
     renderBusOptionen();
   });

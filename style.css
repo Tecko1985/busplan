@@ -235,6 +235,11 @@ body.can-edit .list-row:hover { background: var(--blue-light); }
 /* ---------- Parameter-/Bus-Optionen-Editor ---------- */
 .param-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 14px; }
 .param-row .pg-label { flex: 1; min-width: 120px; padding: 7px 9px; border: 1px solid var(--border); border-radius: 6px; }
+.busoption-row { margin-bottom: 14px; }
+.busoption-row .pg-regeln {
+  width: 100%; padding: 7px 9px; border: 1px solid var(--border); border-radius: 6px;
+  font-size: 13px; font-family: inherit; resize: vertical;
+}
 .icon-btn {
   background: var(--red-light); color: var(--red); border: none; border-radius: 6px;
   width: 30px; height: 30px; font-size: 18px; line-height: 1; cursor: pointer; font-weight: 700;
