@@ -39,6 +39,7 @@
       <button data-tab="uebersicht" class="active">Übersicht</button>
       <button data-tab="busplan">Busplan</button>
       <button data-tab="liste">Liste</button>
+      <button data-tab="busoptionen">Bus-Optionen</button>
       <button data-tab="einstellungen">Einstellungen</button>
     </nav>
 
@@ -99,6 +100,16 @@
         </div>
       </section>
 
+      <!-- ---------- Bus-Optionen ---------- -->
+      <section class="tab-section" id="tab-busoptionen">
+        <div class="card">
+          <h2>Bus-Optionen</h2>
+          <p class="muted" style="margin-bottom:16px;">Diese Optionen stehen bei den Mannschaften zur Auswahl (z. B. Stadtbus, Busunternehmen, vereinseigene Busse) — inkl. Regeln je Bus (z. B. Buchungsfrist, maximale Personenzahl, Abfahrtsort). Gelten nur für die aktuelle Saison. Sichtbar für alle, bearbeiten dürfen nur Admin und die Gruppe „Busplan Bearbeiter“.</p>
+          <div id="busoptionen-list"></div>
+          <button class="btn small secondary editor-only hidden" id="btn-add-busoption" style="margin-top:8px;">+ Bus-Option</button>
+        </div>
+      </section>
+
       <!-- ---------- Einstellungen ---------- -->
       <section class="tab-section" id="tab-einstellungen">
         <div class="card">
@@ -117,12 +128,6 @@
           <p class="muted" style="margin-bottom:14px;">Einmaliger Import des bestehenden Excel-Plans (als JSON-Datei) für die aktuelle Saison — ersetzt vorhandene Mannschaften/Spiele nach Rückfrage.</p>
           <button class="btn success editor-only hidden" id="btn-import-seed">Datendatei auswählen…</button>
           <input type="file" id="import-file-input" accept="application/json" class="hidden" />
-        </div>
-        <div class="card">
-          <h2>Bus-Optionen</h2>
-          <p class="muted" style="margin-bottom:16px;">Diese Optionen stehen bei den Mannschaften zur Auswahl (z. B. Stadtbus, Busunternehmen, vereinseigene Busse). Gelten nur für die aktuelle Saison.</p>
-          <div id="busoptionen-list"></div>
-          <button class="btn small secondary editor-only hidden" id="btn-add-busoption" style="margin-top:8px;">+ Bus-Option</button>
         </div>
         <div class="card">
           <h2>Info <span class="version-badge" id="version-badge-2"></span></h2>

@@ -281,7 +281,7 @@ function openTeamModal(id) {
   document.getElementById("tf-optionen").innerHTML = season.busOptions.length
     ? season.busOptions.map((o) => `
       <label class="checkbox-row"><input type="checkbox" value="${escapeHtml(o.id)}" ${t && t.busOptionIds.includes(o.id) ? "checked" : ""} /> ${escapeHtml(o.name)}</label>`).join("")
-    : `<p class="muted">Noch keine Bus-Optionen angelegt — zuerst in den Einstellungen anlegen.</p>`;
+    : `<p class="muted">Noch keine Bus-Optionen angelegt — zuerst im Tab „Bus-Optionen" anlegen.</p>`;
   document.getElementById("btn-delete-team").classList.toggle("hidden", !t);
   document.getElementById("team-modal").classList.remove("hidden");
   document.getElementById("tf-name").focus();
@@ -610,7 +610,8 @@ function switchTab(tab) {
   if (tab === "uebersicht") { renderSummary(); renderKonflikte(); }
   if (tab === "busplan") { renderTeamSwitch(); renderBusplanGrid(); }
   if (tab === "liste") { fillListeTeamFilter(); renderListe(); }
-  if (tab === "einstellungen") { renderMeta(); renderVersionInfo(); renderSeasonSelect(); renderBusOptionen(); }
+  if (tab === "busoptionen") { renderBusOptionen(); }
+  if (tab === "einstellungen") { renderMeta(); renderVersionInfo(); renderSeasonSelect(); }
 }
 
 // ---------- Gateway: Laden / Speichern / Konflikte ----------
