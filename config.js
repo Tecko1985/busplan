@@ -1,8 +1,4 @@
-const APP_VERSION = "1.6";
-
-// Gruppen-Id (Tools-Übersicht-Benutzerverwaltung) für Nutzer ohne Admin-Status,
-// die den Busplan trotzdem bearbeiten dürfen. Mitgliederpflege dort, nicht hier.
-const EDITOR_GROUP_ID = "busplan-bearbeiter";
+const APP_VERSION = "1.7";
 
 // Startsaison, falls im Gateway noch nichts liegt.
 const DEFAULT_SEASON = "Fruehjahr-2026";
@@ -41,6 +37,17 @@ const DEFAULT_TEAMS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.7",
+    groups: [
+      {
+        title: "Rechte",
+        items: [
+          "Bearbeiten-Rechte werden jetzt über die Gruppenverwaltung der Tools-Übersicht vergeben, statt über eine feste Bearbeiter-Gruppe."
+        ]
+      }
+    ]
+  },
   {
     version: "1.6",
     groups: [

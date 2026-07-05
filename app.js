@@ -108,8 +108,7 @@ function currentTeam() { return getSeason().teams.find((t) => t.id === currentTe
 
 function canEdit() {
   if (!currentUser) return false;
-  if (currentUser.isAdmin) return true;
-  return (currentUser.groupIds || []).includes(EDITOR_GROUP_ID);
+  return currentUser.isAdmin || !!currentUser.canEdit;
 }
 
 // ---------- Übersicht ----------
