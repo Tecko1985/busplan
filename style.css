@@ -183,6 +183,17 @@ table.busplan-table td { vertical-align: middle; }
 }
 body.can-edit .status-badge.is-clickable { cursor: pointer; }
 body.can-edit .status-badge.is-clickable:hover { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25); }
+.status-badge.has-conflict { box-shadow: 0 0 0 2px var(--red); }
+body.can-edit .status-badge.has-conflict.is-clickable:hover { box-shadow: 0 0 0 2px var(--red); }
+
+/* ---------- Konflikte-Karte (Übersicht) ---------- */
+.konflikt-row {
+  display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+  padding: 10px 14px; border: 1px solid var(--red); background: var(--red-light);
+  border-radius: 8px; margin-bottom: 8px; font-size: 14px; cursor: pointer;
+}
+.konflikt-row:hover { opacity: 0.85; }
+.konflikt-row .lr-strong { font-weight: 700; }
 
 /* ---------- Filterleiste / Liste ---------- */
 .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }

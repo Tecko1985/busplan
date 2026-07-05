@@ -1,4 +1,4 @@
-const APP_VERSION = "1.0";
+const APP_VERSION = "1.1";
 
 // Gruppen-Id (Tools-Übersicht-Benutzerverwaltung) für Nutzer ohne Admin-Status,
 // die den Busplan trotzdem bearbeiten dürfen. Mitgliederpflege dort, nicht hier.
@@ -41,6 +41,18 @@ const DEFAULT_TEAMS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.1",
+    groups: [
+      {
+        title: "Konflikt-Prüfung",
+        items: [
+          "Nutzen zwei Mannschaften dieselbe Bus-Option am selben Tag (z. B. Stadtbus), wird das als Konflikt markiert — als Warn-Symbol direkt am Status im Busplan-Gitter und gesammelt in einer neuen Übersichts-Karte.",
+          "Beim Setzen eines Status auf einen bereits belegten Tag/Bus erscheint zusätzlich eine Sicherheitsabfrage (kann bei Bedarf trotzdem gespeichert werden, z. B. bei einer bewusst gemeinsamen Fahrt)."
+        ]
+      }
+    ]
+  },
   {
     version: "1.0",
     groups: [

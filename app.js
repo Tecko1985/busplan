@@ -14,6 +14,10 @@ function escapeHtml(str) {
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
 function val(id) { const el = document.getElementById(id); return el ? el.value : ""; }
 
+// Status-Werte, die einen Bus tatsächlich belegen (für die Konflikt-Prüfung) —
+// "" (leer) und "absage" schließen eine Nutzung explizit aus.
+const CONFLICT_STATUS_IDS = STATUS_WERTE.filter((s) => s.id && s.id !== "absage").map((s) => s.id);
+
 const WOCHENTAGE_KURZ = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
 function fmtDatum(iso) {
   if (!iso) return "—";
@@ -149,6 +153,52 @@ function renderSummary() {
   document.getElementById("uebersicht-empty").classList.toggle("hidden", season.teams.length > 0);
 }
 
+// ---------- Konflikt-Prüfung ----------
+// Gruppiert alle Spiele der aktuellen Saison nach (Datum, Bus-Option). Eine Gruppe
+// mit >=2 Einträgen ist ein Konflikt — auch innerhalb derselben Mannschaft (zwei
+// Spiele am selben Tag, die denselben Bus bräuchten).
+function findConflictGroups() {
+  const season = getSeason();
+  const groups = {};
+  season.teams.forEach((t) => t.spiele.forEach((sp) => {
+    if (!sp.datum) return;
+    t.busOptionIds.forEach((oid) => {
+      const st = sp.status[oid];
+      if (!st || !CONFLICT_STATUS_IDS.includes(st.wert)) return;
+      const key = sp.datum + "|" + oid;
+      if (!groups[key]) groups[key] = { datum: sp.datum, optionId: oid, entries: [] };
+      groups[key].entries.push({ teamId: t.id, teamName: t.name, spielId: sp.id, ort: sp.ort, wert: st.wert });
+    });
+  }));
+  return Object.values(groups).filter((g) => g.entries.length >= 2);
+}
+// Lookup-Map "teamId|spielId|optionId" -> die JEWEILS ANDEREN Konflikt-Partner (für die Gitter-Zelle).
+function conflictMapFromGroups(groups) {
+  const map = {};
+  groups.forEach((g) => {
+    g.entries.forEach((e) => {
+      map[`${e.teamId}|${e.spielId}|${g.optionId}`] = g.entries.filter((o) => o !== e);
+    });
+  });
+  return map;
+}
+function renderKonflikte() {
+  const groups = findConflictGroups().sort((a, b) => a.datum.localeCompare(b.datum));
+  const card = document.getElementById("konflikte-card");
+  card.classList.toggle("hidden", groups.length === 0);
+  if (!groups.length) return;
+  const season = getSeason();
+  document.getElementById("konflikte-list").innerHTML = groups.map((g) => {
+    const option = season.busOptions.find((o) => o.id === g.optionId);
+    const teamsText = g.entries.map((e) => `${escapeHtml(e.teamName)} (${escapeHtml(e.ort || "Ort offen")})`).join(" + ");
+    return `<div class="konflikt-row" data-team="${escapeHtml(g.entries[0].teamId)}">
+      <span class="lr-strong">${escapeHtml(fmtDatum(g.datum))}</span>
+      <span>${escapeHtml(option ? option.name : g.optionId)}</span>
+      <span>${teamsText}</span>
+    </div>`;
+  }).join("");
+}
+
 // ---------- Busplan-Tab ----------
 function renderTeamSwitch() {
   const season = getSeason();
@@ -186,15 +236,21 @@ function renderBusplanGrid() {
     <div class="form-field"><label>Trainer</label><span>${escapeHtml(team.trainer || "—")}</span></div>
   </div>`;
   const spiele = team.spiele.slice().sort((a, b) => (a.datum || "").localeCompare(b.datum || ""));
+  const conflictMap = conflictMapFromGroups(findConflictGroups());
   const editorCol = canEdit() ? "<th></th>" : "";
   const theadHtml = `<tr><th>Datum</th><th>Ort</th>${options.map((o) => `<th>${escapeHtml(o.name)}</th>`).join("")}<th>Notiz</th>${editorCol}</tr>`;
   const rowsHtml = spiele.map((sp) => {
     const cells = options.map((o) => {
       const st = sp.status[o.id] || { wert: "", notiz: "" };
       const def = STATUS_WERTE.find((s) => s.id === st.wert) || STATUS_WERTE[0];
-      const title = st.notiz ? ` title="${escapeHtml(st.notiz)}"` : "";
+      const partners = conflictMap[`${team.id}|${sp.id}|${o.id}`];
+      const notizParts = [];
+      if (st.notiz) notizParts.push(st.notiz);
+      if (partners) notizParts.push("Konflikt: auch " + partners.map((p) => `${p.teamName} (${p.ort || "Ort offen"})`).join(", "));
+      const title = notizParts.length ? ` title="${escapeHtml(notizParts.join(" — "))}"` : "";
       const clickable = canEdit() ? " is-clickable" : "";
-      return `<td><span class="status-badge${clickable}" data-status-cell data-spiel="${escapeHtml(sp.id)}" data-option="${escapeHtml(o.id)}" style="background:${def.farbe}"${title}>${escapeHtml(def.label)}${st.notiz ? " 💬" : ""}</span></td>`;
+      const conflictClass = partners ? " has-conflict" : "";
+      return `<td><span class="status-badge${clickable}${conflictClass}" data-status-cell data-spiel="${escapeHtml(sp.id)}" data-option="${escapeHtml(o.id)}" style="background:${def.farbe}"${title}>${escapeHtml(def.label)}${st.notiz ? " 💬" : ""}${partners ? " ⚠️" : ""}</span></td>`;
     }).join("");
     const editorCell = canEdit() ? `<td><button class="icon-btn edit" data-edit-spiel="${escapeHtml(sp.id)}" title="Spiel bearbeiten">✎</button></td>` : "";
     return `<tr>
@@ -340,10 +396,24 @@ function saveStatus() {
   const team = getSeason().teams.find((t) => t.id === teamId);
   const sp = team && team.spiele.find((x) => x.id === spielId);
   if (!sp) return;
-  sp.status[optionId] = { wert: val("sm-wert"), notiz: val("sm-notiz").trim() };
+  const wert = val("sm-wert");
+  if (CONFLICT_STATUS_IDS.includes(wert) && sp.datum) {
+    const others = getSeason().teams.flatMap((t) => t.spiele
+      .filter((x) => x.datum === sp.datum && !(t.id === teamId && x.id === spielId) && t.busOptionIds.includes(optionId))
+      .filter((x) => CONFLICT_STATUS_IDS.includes((x.status[optionId] || {}).wert))
+      .map((x) => ({ teamName: t.name, ort: x.ort })));
+    if (others.length) {
+      const option = getSeason().busOptions.find((o) => o.id === optionId);
+      const list = others.map((o) => `${o.teamName} (${o.ort || "Ort offen"})`).join(", ");
+      const proceed = confirm(`Achtung: ${list} nutzt „${option ? option.name : optionId}" ebenfalls am ${fmtDatum(sp.datum)}. Trotzdem speichern?`);
+      if (!proceed) return;
+    }
+  }
+  sp.status[optionId] = { wert, notiz: val("sm-notiz").trim() };
   persist();
   renderBusplanGrid();
   renderSummary();
+  renderKonflikte();
   closeStatusModal();
 }
 
@@ -518,6 +588,7 @@ function applyEditVisibility() {
 function renderAll() {
   renderSeasonSelect();
   renderSummary();
+  renderKonflikte();
   renderTeamSwitch();
   renderBusplanGrid();
   fillListeTeamFilter();
@@ -534,7 +605,7 @@ function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll("nav button").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
   document.querySelectorAll(".tab-section").forEach((s) => s.classList.toggle("active", s.id === "tab-" + tab));
-  if (tab === "uebersicht") renderSummary();
+  if (tab === "uebersicht") { renderSummary(); renderKonflikte(); }
   if (tab === "busplan") { renderTeamSwitch(); renderBusplanGrid(); }
   if (tab === "liste") { fillListeTeamFilter(); renderListe(); }
   if (tab === "einstellungen") { renderMeta(); renderVersionInfo(); renderSeasonSelect(); renderBusOptionen(); }
@@ -617,6 +688,10 @@ function setupListeners() {
   // Übersicht: Klick auf Mannschafts-Zeile springt in den Busplan-Tab.
   document.querySelector("#uebersicht-teams tbody").addEventListener("click", (e) => {
     const row = e.target.closest(".data-row");
+    if (row) { switchTab("busplan"); selectTeam(row.dataset.team); }
+  });
+  document.getElementById("konflikte-list").addEventListener("click", (e) => {
+    const row = e.target.closest(".konflikt-row");
     if (row) { switchTab("busplan"); selectTeam(row.dataset.team); }
   });
 
