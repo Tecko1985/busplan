@@ -1,4 +1,4 @@
-const APP_VERSION = "1.3";
+const APP_VERSION = "1.4";
 
 // Gruppen-Id (Tools-Übersicht-Benutzerverwaltung) für Nutzer ohne Admin-Status,
 // die den Busplan trotzdem bearbeiten dürfen. Mitgliederpflege dort, nicht hier.
@@ -41,6 +41,17 @@ const DEFAULT_TEAMS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.4",
+    groups: [
+      {
+        title: "Navigation",
+        items: [
+          "„Zurück zum Dashboard“ ist jetzt ein Button direkt in der blauen Kopfzeile (mittig), statt eines separaten Links darüber."
+        ]
+      }
+    ]
+  },
   {
     version: "1.3",
     groups: [
