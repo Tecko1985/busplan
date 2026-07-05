@@ -66,11 +66,6 @@
 
       <!-- ---------- Busplan (je Mannschaft) ---------- -->
       <section class="tab-section" id="tab-busplan">
-        <div class="import-banner hidden" id="import-banner">
-          <p>Es sind noch keine Mannschaften erfasst. Der bestehende Excel-Plan kann einmalig (als JSON-Datei) importiert werden.</p>
-          <button class="btn success editor-only hidden" id="btn-import-seed">Datendatei auswählen…</button>
-          <input type="file" id="import-file-input" accept="application/json" class="hidden" />
-        </div>
         <div class="toolbar">
           <div class="day-switch" id="team-switch"></div>
           <div class="toolbar-right">
@@ -116,6 +111,12 @@
             <button class="btn small secondary" id="btn-season-duplicate">Aktuelle duplizieren…</button>
             <button class="btn small danger" id="btn-season-delete">Saison löschen…</button>
           </div>
+        </div>
+        <div class="card">
+          <h2>Daten-Import</h2>
+          <p class="muted" style="margin-bottom:14px;">Einmaliger Import des bestehenden Excel-Plans (als JSON-Datei) für die aktuelle Saison — ersetzt vorhandene Mannschaften/Spiele nach Rückfrage.</p>
+          <button class="btn success editor-only hidden" id="btn-import-seed">Datendatei auswählen…</button>
+          <input type="file" id="import-file-input" accept="application/json" class="hidden" />
         </div>
         <div class="card">
           <h2>Bus-Optionen</h2>

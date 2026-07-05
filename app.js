@@ -597,7 +597,6 @@ function renderAll() {
   renderMeta();
   renderVersionInfo();
   applyEditVisibility();
-  document.getElementById("import-banner").classList.toggle("hidden", getSeason().teams.length > 0);
 }
 
 // ---------- Tabs ----------
