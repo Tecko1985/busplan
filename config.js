@@ -45,9 +45,9 @@ const APP_CHANGELOG = [
     version: "1.3",
     groups: [
       {
-        title: "Bus-Optionen als eigener Tab",
+        title: "Bus-Regeln als eigener Tab",
         items: [
-          "Bus-Optionen und ihre Regeln stehen jetzt in einem eigenen Tab „Bus-Optionen“ statt in den Einstellungen — für alle eingeloggten Nutzer einsehbar, bearbeiten dürfen weiterhin nur Admin und die Gruppe „Busplan Bearbeiter“."
+          "Bus-Optionen und ihre Regeln stehen jetzt in einem eigenen Tab „Bus-Regeln“ statt in den Einstellungen — für alle eingeloggten Nutzer einsehbar, bearbeiten dürfen weiterhin nur Admin und die Gruppe „Busplan Bearbeiter“."
         ]
       }
     ]
