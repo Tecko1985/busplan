@@ -140,7 +140,7 @@ function renderSummary() {
     </div>`).join("");
 
   const rows = season.teams.map((t) => {
-    const offen = t.spiele.reduce((a, sp) => a + t.busOptionIds.filter((oid) => ["offen", "klaerung"].includes(sp.status[oid].wert)).length, 0);
+    const offen = t.spiele.reduce((a, sp) => a + t.busOptionIds.filter((oid) => ["offen", "klaerung"].includes((sp.status[oid] || {}).wert)).length, 0);
     return `<tr class="data-row" data-team="${escapeHtml(t.id)}">
       <td class="strong">${escapeHtml(t.name)}</td>
       <td>${escapeHtml(t.liga)}</td>
@@ -421,7 +421,7 @@ function allSpieleFlat() {
   const season = getSeason();
   const rows = [];
   season.teams.forEach((t) => t.spiele.forEach((sp) => {
-    const kritisch = t.busOptionIds.filter((oid) => ["offen", "klaerung"].includes(sp.status[oid].wert)).length;
+    const kritisch = t.busOptionIds.filter((oid) => ["offen", "klaerung"].includes((sp.status[oid] || {}).wert)).length;
     rows.push({ teamId: t.id, teamName: t.name, spielId: sp.id, datum: sp.datum, ort: sp.ort, kritisch });
   }));
   rows.sort((a, b) => (a.datum || "").localeCompare(b.datum || ""));

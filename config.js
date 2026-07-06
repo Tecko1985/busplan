@@ -1,4 +1,4 @@
-const APP_VERSION = "1.0";
+const APP_VERSION = "1.1";
 
 // Startsaison, falls im Gateway noch nichts liegt.
 const DEFAULT_SEASON = "Fruehjahr-2026";
@@ -37,6 +37,17 @@ const DEFAULT_TEAMS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.1",
+    groups: [
+      {
+        title: "Stabilität",
+        items: [
+          "Übersicht und Liste stürzen nicht mehr ab, falls einer Bus-Option nachträglich Mannschaften zugeordnet werden, bevor allen Spielen ein Status gesetzt wurde."
+        ]
+      }
+    ]
+  },
   {
     version: "1.0",
     groups: [
