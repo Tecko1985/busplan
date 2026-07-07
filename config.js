@@ -1,4 +1,4 @@
-const APP_VERSION = "1.1";
+const APP_VERSION = "1.2";
 
 // Startsaison, falls im Gateway noch nichts liegt.
 const DEFAULT_SEASON = "Fruehjahr-2026";
@@ -37,6 +37,17 @@ const DEFAULT_TEAMS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.2",
+    groups: [
+      {
+        title: "Einstellungen",
+        items: [
+          "Doppelte Versionsanzeige im Einstellungen-Button entfernt."
+        ]
+      }
+    ]
+  },
   {
     version: "1.1",
     groups: [
