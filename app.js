@@ -455,6 +455,73 @@ function renderListe() {
   document.getElementById("liste-empty").classList.toggle("hidden", rows.length > 0);
 }
 
+// ---------- PDF-Export (Gesamtübersicht) ----------
+function exportBusplanPdf() {
+  const season = getSeason();
+  const counts = statusCounts();
+  const totalSpiele = season.teams.reduce((a, t) => a + t.spiele.length, 0);
+  const kennzahlen = [
+    { label: "Mannschaften", value: season.teams.length },
+    { label: "Spiele gesamt", value: totalSpiele },
+    { label: "Zusagen", value: counts.zusage || 0 },
+    { label: "Offen / in Klärung", value: (counts.offen || 0) + (counts.klaerung || 0) },
+    { label: "Absagen", value: counts.absage || 0 }
+  ];
+  const kennzahlenHtml = kennzahlen.map((k) => `
+    <div class="print-kennzahl"><div class="pk-label">${escapeHtml(k.label)}</div><div class="pk-value">${escapeHtml(String(k.value))}</div></div>`).join("");
+
+  const conflictGroups = findConflictGroups().sort((a, b) => a.datum.localeCompare(b.datum));
+  const conflictMap = conflictMapFromGroups(conflictGroups);
+  const conflictHtml = conflictGroups.length ? `
+    <div class="print-konflikte">
+      <h2>⚠️ Konflikte</h2>
+      ${conflictGroups.map((g) => {
+        const option = season.busOptions.find((o) => o.id === g.optionId);
+        const teamsText = g.entries.map((e) => `${escapeHtml(e.teamName)} (${escapeHtml(e.ort || "Ort offen")})`).join(" + ");
+        return `<div class="print-konflikt-row"><strong>${escapeHtml(fmtDatum(g.datum))}</strong> — ${escapeHtml(option ? option.name : g.optionId)}: ${teamsText}</div>`;
+      }).join("")}
+    </div>` : "";
+
+  const teamBlocksHtml = season.teams.map((t) => {
+    const options = t.busOptionIds.map((id) => season.busOptions.find((o) => o.id === id)).filter(Boolean);
+    const spiele = t.spiele.slice().sort((a, b) => (a.datum || "").localeCompare(b.datum || ""));
+    const heading = `<h2>${escapeHtml(t.name)}${t.liga ? " — " + escapeHtml(t.liga) : ""}</h2>`;
+    if (!spiele.length) {
+      return `<div class="print-team-block">${heading}<p class="print-meta">Keine Spiele erfasst.</p></div>`;
+    }
+    const theadHtml = `<tr><th>Datum</th><th>Ort</th>${options.map((o) => `<th>${escapeHtml(o.name)}</th>`).join("")}<th>Notiz</th></tr>`;
+    const rowsHtml = spiele.map((sp) => {
+      const cells = options.map((o) => {
+        const st = sp.status[o.id] || { wert: "", notiz: "" };
+        const def = STATUS_WERTE.find((s) => s.id === st.wert) || STATUS_WERTE[0];
+        const partners = conflictMap[`${t.id}|${sp.id}|${o.id}`];
+        let text = def.label;
+        if (st.notiz) text += " – " + st.notiz;
+        if (partners) text += " ⚠️";
+        return `<td class="print-status-cell" style="background:${def.farbe}">${escapeHtml(text)}</td>`;
+      }).join("");
+      return `<tr>
+        <td class="strong">${escapeHtml(fmtDatum(sp.datum))}</td>
+        <td>${escapeHtml(sp.ort)}</td>
+        ${cells}
+        <td>${escapeHtml(sp.notiz || "")}</td>
+      </tr>`;
+    }).join("");
+    return `<div class="print-team-block">${heading}<table class="print-table"><thead>${theadHtml}</thead><tbody>${rowsHtml}</tbody></table></div>`;
+  }).join("");
+
+  document.getElementById("print-content").innerHTML = `
+    <h1>🚌 Busplan — Gesamtübersicht</h1>
+    <p class="print-meta">Saison ${escapeHtml(currentSeasonKey())} — erstellt am ${new Date().toLocaleString("de-DE")}</p>
+    <div class="print-kennzahlen">${kennzahlenHtml}</div>
+    ${conflictHtml}
+    ${teamBlocksHtml || `<p class="print-meta">Für diese Saison sind noch keine Mannschaften erfasst.</p>`}`;
+  document.body.classList.add("printing-report");
+  const cleanup = () => { document.body.classList.remove("printing-report"); window.removeEventListener("afterprint", cleanup); };
+  window.addEventListener("afterprint", cleanup);
+  setTimeout(() => window.print(), 150);
+}
+
 // ---------- Bus-Optionen-Editor ----------
 function cleanupSeasonReferences() {
   appData.seasons[currentSeasonKey()] = normalizeSeason(getSeason());
@@ -696,6 +763,7 @@ function setupListeners() {
     const row = e.target.closest(".konflikt-row");
     if (row) { switchTab("busplan"); selectTeam(row.dataset.team); }
   });
+  document.getElementById("btn-export-pdf").addEventListener("click", exportBusplanPdf);
 
   // Mannschafts-Umschalter
   document.getElementById("team-switch").addEventListener("click", (e) => {

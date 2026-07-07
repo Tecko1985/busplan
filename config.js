@@ -1,4 +1,4 @@
-const APP_VERSION = "1.2";
+const APP_VERSION = "1.3";
 
 // Startsaison, falls im Gateway noch nichts liegt.
 const DEFAULT_SEASON = "Fruehjahr-2026";
@@ -37,6 +37,17 @@ const DEFAULT_TEAMS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.3",
+    groups: [
+      {
+        title: "Export",
+        items: [
+          "Neuer Button „🖨 Als PDF“ im Tab Übersicht: druckt eine Gesamtübersicht der aktuellen Saison (Kennzahlen, Konflikte sowie je Mannschaft eine Tabelle mit allen Spielen und dem Status je Bus-Option) — zum Ausdrucken oder als PDF speichern."
+        ]
+      }
+    ]
+  },
   {
     version: "1.2",
     groups: [
