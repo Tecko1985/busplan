@@ -202,14 +202,31 @@ function renderKonflikte() {
 function renderTeamSwitch() {
   const season = getSeason();
   if (!season.teams.some((t) => t.id === currentTeamId)) currentTeamId = season.teams[0] ? season.teams[0].id : null;
+  const editable = canEdit();
   document.getElementById("team-switch").innerHTML = season.teams.map((t) =>
-    `<button data-team="${escapeHtml(t.id)}" class="${t.id === currentTeamId ? "active" : ""}">${escapeHtml(t.name)}</button>`
+    `<button data-team="${escapeHtml(t.id)}" class="${t.id === currentTeamId ? "active" : ""}"${editable ? ' draggable="true"' : ""}>${escapeHtml(t.name)}</button>`
   ).join("");
 }
 function selectTeam(id) {
   currentTeamId = id;
   renderTeamSwitch();
   renderBusplanGrid();
+}
+// Sortierung der Mannschafts-Reiter per Drag-and-Drop (nur Bearbeiter/Admin,
+// siehe draggable-Attribut in renderTeamSwitch). Eingefügtes Team übernimmt die
+// Index-Position des Drop-Ziels, alle anderen Teams behalten ihre Reihenfolge —
+// wirkt sich auf jede Ansicht aus, die season.teams in Array-Reihenfolge zeigt
+// (Übersicht-Tabelle, Liste-Filter, PDF-Export).
+function reorderTeams(draggedId, targetId) {
+  if (!canEdit() || !draggedId || draggedId === targetId) return;
+  const season = getSeason();
+  const from = season.teams.findIndex((t) => t.id === draggedId);
+  const to = season.teams.findIndex((t) => t.id === targetId);
+  if (from === -1 || to === -1) return;
+  const [moved] = season.teams.splice(from, 1);
+  season.teams.splice(to, 0, moved);
+  persist();
+  renderTeamSwitch();
 }
 function renderBusplanGrid() {
   const team = currentTeam();
@@ -765,10 +782,39 @@ function setupListeners() {
   });
   document.getElementById("btn-export-pdf").addEventListener("click", exportBusplanPdf);
 
-  // Mannschafts-Umschalter
-  document.getElementById("team-switch").addEventListener("click", (e) => {
+  // Mannschafts-Umschalter (Klick zum Wechseln + Drag-and-Drop zum Sortieren)
+  const teamSwitch = document.getElementById("team-switch");
+  teamSwitch.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-team]");
     if (btn) selectTeam(btn.dataset.team);
+  });
+  teamSwitch.addEventListener("dragstart", (e) => {
+    const btn = e.target.closest("button[data-team]");
+    if (!btn || !canEdit()) { e.preventDefault(); return; }
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", btn.dataset.team);
+    btn.classList.add("dragging");
+  });
+  teamSwitch.addEventListener("dragover", (e) => {
+    const btn = e.target.closest("button[data-team]");
+    if (!btn || !canEdit()) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    teamSwitch.querySelectorAll("button.drag-over").forEach((b) => { if (b !== btn) b.classList.remove("drag-over"); });
+    btn.classList.add("drag-over");
+  });
+  teamSwitch.addEventListener("dragleave", (e) => {
+    const btn = e.target.closest("button[data-team]");
+    if (btn) btn.classList.remove("drag-over");
+  });
+  teamSwitch.addEventListener("drop", (e) => {
+    const btn = e.target.closest("button[data-team]");
+    if (!btn || !canEdit()) return;
+    e.preventDefault();
+    reorderTeams(e.dataTransfer.getData("text/plain"), btn.dataset.team);
+  });
+  teamSwitch.addEventListener("dragend", () => {
+    teamSwitch.querySelectorAll("button.dragging, button.drag-over").forEach((b) => b.classList.remove("dragging", "drag-over"));
   });
   document.getElementById("btn-new-team").addEventListener("click", () => openTeamModal(null));
   document.getElementById("btn-edit-team").addEventListener("click", () => { if (currentTeamId) openTeamModal(currentTeamId); });

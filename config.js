@@ -1,4 +1,4 @@
-const APP_VERSION = "1.3";
+const APP_VERSION = "1.4";
 
 // Startsaison, falls im Gateway noch nichts liegt.
 const DEFAULT_SEASON = "Fruehjahr-2026";
@@ -37,6 +37,17 @@ const DEFAULT_TEAMS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.4",
+    groups: [
+      {
+        title: "Busplan",
+        items: [
+          "Mannschafts-Reiter im Tab Busplan lassen sich per Drag-and-Drop neu anordnen (nur Bearbeiter/Admin) — die Reihenfolge gilt danach auch in Übersicht, Liste und PDF-Export."
+        ]
+      }
+    ]
+  },
   {
     version: "1.3",
     groups: [

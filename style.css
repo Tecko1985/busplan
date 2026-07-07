@@ -149,6 +149,9 @@ button.btn:hover, .btn:hover { opacity: 0.9; }
 }
 .day-switch button:hover { background: var(--blue-light); }
 .day-switch button.active { background: var(--blue); color: white; border-color: var(--blue); }
+.day-switch button[draggable="true"] { cursor: grab; }
+.day-switch button.dragging { opacity: 0.4; cursor: grabbing; }
+.day-switch button.drag-over { outline: 2px dashed var(--blue); outline-offset: 2px; }
 .toolbar-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
 /* ---------- Summen-Karten (Übersicht) ---------- */
