@@ -1,4 +1,4 @@
-const APP_VERSION = "1.5";
+const APP_VERSION = "1.0";
 
 // Startsaison, falls im Gateway noch nichts liegt.
 const DEFAULT_SEASON = "Fruehjahr-2026";
@@ -38,61 +38,6 @@ const DEFAULT_TEAMS = [
 
 const APP_CHANGELOG = [
   {
-    version: "1.5",
-    groups: [
-      {
-        title: "Versionsbadge",
-        items: [
-          "Der Versionshinweis oben neben dem Titel ist jetzt anklickbar und führt direkt zu dieser Änderungsübersicht im Einstellungen-Tab."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.4",
-    groups: [
-      {
-        title: "Busplan",
-        items: [
-          "Mannschafts-Reiter im Tab Busplan lassen sich per Drag-and-Drop neu anordnen (nur Bearbeiter/Admin) — die Reihenfolge gilt danach auch in Übersicht, Liste und PDF-Export."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.3",
-    groups: [
-      {
-        title: "Export",
-        items: [
-          "Neuer Button „🖨 Als PDF“ im Tab Übersicht: druckt eine Gesamtübersicht der aktuellen Saison (Kennzahlen, Konflikte sowie je Mannschaft eine Tabelle mit allen Spielen und dem Status je Bus-Option) — zum Ausdrucken oder als PDF speichern."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.2",
-    groups: [
-      {
-        title: "Einstellungen",
-        items: [
-          "Doppelte Versionsanzeige im Einstellungen-Button entfernt."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.1",
-    groups: [
-      {
-        title: "Stabilität",
-        items: [
-          "Übersicht und Liste stürzen nicht mehr ab, falls einer Bus-Option nachträglich Mannschaften zugeordnet werden, bevor allen Spielen ein Status gesetzt wurde."
-        ]
-      }
-    ]
-  },
-  {
     version: "1.0",
     groups: [
       {
@@ -100,7 +45,8 @@ const APP_CHANGELOG = [
         items: [
           "Löst die Excel „Busse Frühjahr 2026“ ab: je Mannschaft eine Liste der Auswärtsspiele mit Status je Transport-Option (Stadtbus, Busunternehmen, vereinseigene Busse, Eltern, Leihwagen).",
           "Mehrere Saisons planbar (Saison anlegen/duplizieren/löschen), wie von Personalkosten/Vereinsbudget gewohnt.",
-          "Mannschaften und Bus-Optionen sind frei konfigurierbar, da sich das Angebot von Saison zu Saison ändert."
+          "Mannschaften und Bus-Optionen sind frei konfigurierbar, da sich das Angebot von Saison zu Saison ändert.",
+          "Mannschafts-Reiter im Tab Busplan lassen sich per Drag-and-Drop neu anordnen (nur Bearbeiter/Admin) — die Reihenfolge gilt danach auch in Übersicht, Liste und PDF-Export."
         ]
       },
       {
@@ -123,6 +69,12 @@ const APP_CHANGELOG = [
           "Mannschaften, Spiele und Bus-Optionen anlegen, ändern und löschen.",
           "Status je Spiel und Bus-Option setzen (Zusage/Absage/offen/in Klärung/Unter Vorbereitung) inkl. optionaler Notiz — z. B. für eine gemeinsame Fahrt mit einer anderen Mannschaft.",
           "Bearbeiten-Recht wird über die Gruppenverwaltung der Tools-Übersicht vergeben (Gruppe braucht \"Bearbeiten\" für Busplan); alle übrigen eingeloggten Nutzer sehen den Plan nur an."
+        ]
+      },
+      {
+        title: "Export",
+        items: [
+          "Button „🖨 Als PDF“ im Tab Übersicht: druckt eine Gesamtübersicht der aktuellen Saison (Kennzahlen, Konflikte sowie je Mannschaft eine Tabelle mit allen Spielen und dem Status je Bus-Option) — zum Ausdrucken oder als PDF speichern."
         ]
       },
       {
