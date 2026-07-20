@@ -38,6 +38,18 @@ const DEFAULT_TEAMS = [
 
 const APP_CHANGELOG = [
   {
+    version: "1.1",
+    groups: [
+      {
+        title: "Speichern",
+        items: [
+          "Behoben: Beim zügigen Bearbeiten — vor allem beim Tippen längerer Bus-Regeln — erschien wiederholt die Meldung „Die Daten wurden zwischenzeitlich auf einem anderen Gerät geändert“, obwohl niemand sonst am Plan arbeitete; die zuletzt getippte Eingabe ging dabei verloren. Es wird jetzt immer nur ein Speichervorgang gleichzeitig ausgeführt, weitere Änderungen werden direkt danach mitgespeichert.",
+          "Die Meldung erscheint dadurch nur noch, wenn tatsächlich ein anderes Gerät den Plan geändert hat."
+        ]
+      }
+    ]
+  },
+  {
     version: "1.0",
     groups: [
       {
