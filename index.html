@@ -39,6 +39,7 @@
       <button data-tab="busplan">Busplan</button>
       <button data-tab="liste">Liste</button>
       <button data-tab="busregeln">Bus-Regeln</button>
+      <button data-tab="info">Info</button>
       <button data-tab="einstellungen" style="margin-left:auto;">Einstellungen</button>
     </nav>
 
@@ -116,6 +117,20 @@
         </div>
       </section>
 
+      <!-- ---------- Info ---------- -->
+      <section class="tab-section" id="tab-info">
+        <div class="card">
+          <h2>Über den Busplan <span class="version-badge" id="version-badge-2"></span></h2>
+          <p class="muted">Planung der Bus-Transporte zu Auswärtsspielen — welche Mannschaft fährt wann mit welchem Bus.</p>
+          <div class="form-grid" id="meta-view"></div>
+          <p class="muted" id="einstellungen-user" style="margin-top:10px;"></p>
+        </div>
+        <div class="card">
+          <h2>Änderungen</h2>
+          <div id="changelog-list"></div>
+        </div>
+      </section>
+
       <!-- ---------- Einstellungen ---------- -->
       <section class="tab-section" id="tab-einstellungen">
         <div class="card">
@@ -134,15 +149,6 @@
           <p class="muted" style="margin-bottom:14px;">Einmaliger Import des bestehenden Excel-Plans (als JSON-Datei) für die aktuelle Saison — ersetzt vorhandene Mannschaften/Spiele nach Rückfrage.</p>
           <button class="btn success editor-only hidden" id="btn-import-seed">Datendatei auswählen…</button>
           <input type="file" id="import-file-input" accept="application/json" class="hidden" />
-        </div>
-        <div class="card">
-          <h2>Info <span class="version-badge" id="version-badge-2"></span></h2>
-          <div class="form-grid" id="meta-view"></div>
-          <p class="muted" id="einstellungen-user" style="margin-top:10px;"></p>
-        </div>
-        <div class="card">
-          <h2>Änderungen</h2>
-          <div id="changelog-list"></div>
         </div>
       </section>
 
@@ -236,6 +242,6 @@
 
   <script src="config.js?v=1.0"></script>
   <script src="db.js?v=1.0"></script>
-  <script src="app.js?v=1.0"></script>
+  <script src="app.js?v=1.1"></script>
 </body>
 </html>

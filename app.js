@@ -694,7 +694,8 @@ function switchTab(tab) {
   if (tab === "busplan") { renderTeamSwitch(); renderBusplanGrid(); }
   if (tab === "liste") { fillListeTeamFilter(); renderListe(); }
   if (tab === "busregeln") { renderBusOptionen(); }
-  if (tab === "einstellungen") { renderMeta(); renderVersionInfo(); renderSeasonSelect(); }
+  if (tab === "einstellungen") { renderSeasonSelect(); }
+  if (tab === "info") { renderMeta(); renderVersionInfo(); }
 }
 
 // ---------- Gateway: Laden / Speichern / Konflikte ----------
@@ -802,9 +803,9 @@ function setupListeners() {
   document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => switchTab(b.dataset.tab)));
 
   const versionBadgeHeader = document.getElementById("version-badge");
-  versionBadgeHeader.addEventListener("click", () => switchTab("einstellungen"));
+  versionBadgeHeader.addEventListener("click", () => switchTab("info"));
   versionBadgeHeader.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); switchTab("einstellungen"); }
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); switchTab("info"); }
   });
 
   document.getElementById("season-select").addEventListener("change", (e) => switchSeason(e.target.value));
