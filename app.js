@@ -543,6 +543,13 @@ function exportBusplanPdf() {
 function cleanupSeasonReferences() {
   appData.seasons[currentSeasonKey()] = normalizeSeason(getSeason());
 }
+// Regeln-Feld immer so hoch wie sein Inhalt — box-sizing ist border-box, scrollHeight
+// enthaelt die Rahmen aber nicht, daher die Differenz offsetHeight-clientHeight addieren.
+function autoGrowRegeln(el) {
+  if (!el || !el.offsetParent) return; // im ausgeblendeten Tab liefert scrollHeight keine brauchbare Hoehe
+  el.style.height = "auto";
+  el.style.height = (el.scrollHeight + el.offsetHeight - el.clientHeight) + "px";
+}
 function renderBusOptionen() {
   const season = getSeason();
   const editable = canEdit();
@@ -554,6 +561,7 @@ function renderBusOptionen() {
       </div>
       <textarea class="pg-regeln" data-regeln-idx="${i}" rows="2" placeholder="Regeln für diesen Bus, z. B. Buchungsfrist, max. Personenzahl, Abfahrtsort …" ${editable ? "" : "disabled"}>${escapeHtml(o.regeln)}</textarea>
     </div>`).join("") || `<p class="muted">Noch keine Bus-Optionen angelegt.</p>`;
+  document.querySelectorAll("#busoptionen-list .pg-regeln").forEach(autoGrowRegeln);
 }
 
 // ---------- Saison-Verwaltung ----------
@@ -946,6 +954,7 @@ function setupListeners() {
     const ridx = e.target.dataset.regelnIdx;
     if (ridx == null) return;
     getSeason().busOptions[Number(ridx)].regeln = e.target.value;
+    autoGrowRegeln(e.target);
     persist();
   });
   bo.addEventListener("click", (e) => {

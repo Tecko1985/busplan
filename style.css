@@ -248,6 +248,8 @@ body.can-edit .list-row:hover { background: var(--blue-light); }
 .busoption-row .pg-regeln {
   width: 100%; padding: 7px 9px; border: 1px solid var(--border); border-radius: 6px;
   font-size: 13px; font-family: inherit; resize: vertical;
+  /* Hoehe setzt autoGrowRegeln() nach dem Inhalt — min-height haelt leere Felder auf zwei Zeilen */
+  min-height: 48px; overflow-y: hidden;
 }
 .icon-btn {
   background: var(--red-light); color: var(--red); border: none; border-radius: 6px;

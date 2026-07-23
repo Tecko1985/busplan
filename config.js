@@ -60,7 +60,8 @@ const APP_CHANGELOG = [
         title: "Bus-Regeln",
         items: [
           "Eigener Tab „Bus-Regeln“: zu jeder Bus-Option lässt sich ein Freitext mit Regeln hinterlegen (z. B. Buchungsfrist, maximale Personenzahl, Abfahrtsort), für alle eingeloggten Nutzer einsehbar.",
-          "Ist eine Regel hinterlegt, erscheint ein ℹ️-Hinweis an der jeweiligen Spalte im Busplan-Gitter — der Regeltext steht als Tooltip dahinter."
+          "Ist eine Regel hinterlegt, erscheint ein ℹ️-Hinweis an der jeweiligen Spalte im Busplan-Gitter — der Regeltext steht als Tooltip dahinter.",
+          "Das Regel-Feld ist immer so hoch wie sein Text: längere Regeln stehen vollständig da, ohne Scrollen im Feld, und beim Tippen wächst es mit."
         ]
       },
       {
