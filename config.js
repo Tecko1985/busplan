@@ -69,7 +69,8 @@ const APP_CHANGELOG = [
         items: [
           "Mannschaften, Spiele und Bus-Optionen anlegen, ändern und löschen.",
           "Status je Spiel und Bus-Option setzen (Zusage/Absage/offen/in Klärung/Unter Vorbereitung) inkl. optionaler Notiz — z. B. für eine gemeinsame Fahrt mit einer anderen Mannschaft.",
-          "Bearbeiten-Recht wird über die Gruppenverwaltung der Tools-Übersicht vergeben (Gruppe braucht \"Bearbeiten\" für Busplan); alle übrigen eingeloggten Nutzer sehen den Plan nur an."
+          "Bearbeiten-Recht wird über die Gruppenverwaltung der Tools-Übersicht vergeben (Gruppe braucht \"Bearbeiten\" für Busplan); alle übrigen eingeloggten Nutzer sehen den Plan nur an.",
+          "Der Einstellungen-Tab (Saisonverwaltung, Daten-Import) erscheint nur noch für Bearbeiter und Admins — für alle anderen war er bis auf die Saison-Anzeige leer."
         ]
       },
       {
